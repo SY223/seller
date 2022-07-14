@@ -4,10 +4,6 @@ from django.utils import timezone
 from decimal import *
 import random
 
-#tryig to draft a model for a simple retail app that operates from backend
-#the app will enter customer orders item by item, total it, determine if payment was successful
-#Upon successful payment, total items price is deducted from total payment, 
-# to determine if there are owings or repayments
 
 MAX_TRIES = 32
 REF_LENGTH = 150 
@@ -33,7 +29,7 @@ class Employee(models.Model):
     phone_number = models.CharField(max_length=20)
 
     def __str__(self):
-        return self.lastname    
+        return f'{self.last_name} {self.firsr_name} '
 
 class Category(models.Model):
     category_name = models.CharField(max_length=50, unique=True)
@@ -53,7 +49,7 @@ class Product(models.Model):
     slug = models.SlugField(max_length=50, unique=True)
     description = models.TextField()
     price = models.DecimalField(max_digits=15,decimal_places=2, default=Decimal('0.00'))
-    image = models.ImageField(upload_to='photos/product')
+    image = models.ImageField(upload_to='photos/product', null=True, blank=True)
     stock = models.IntegerField()
     is_available = models.BooleanField(default=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='product_category')
@@ -66,11 +62,10 @@ class Product(models.Model):
     def save(self, *args, **kwargs):
         if not self.id:
             self.created_date = datetime.datetime.now(tz=timezone.utc)
-            self.modified_date = datetime.datetime.now(tz=timezone.utc)
-            return super(Product, self).save( *args, **kwargs)
+        self.modified_date = datetime.datetime.now(tz=timezone.utc)
+        return super(Product, self).save( *args, **kwargs)
 
-#these customers are random person that make purchase at the store
-#the unique thing about cutomers are their transaction id and date.
+
 class Customer(models.Model):
     customer_name = models.CharField(max_length=50, blank=False)
     customer_email = models.EmailField(unique=True)
@@ -87,9 +82,10 @@ class Order(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product_name')
     price = models.DecimalField(max_digits=15,decimal_places=2, default=Decimal('0.00'))
     quantity = models.IntegerField()
-    total = models.FloatField() 
-    owings = models.FloatField() #Amount to pay as change to customer
-    repayments = models.FloatField() #Amount customer owe us
+    total = models.FloatField()
+    total_paid = models.FloatField()
+    balance = models.FloatField() #Amount to pay as change to customer
+    excess = models.FloatField() #Amount customer owe us
     created_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -105,8 +101,7 @@ class Payment(models.Model):
     modified_date = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f'{self.payment_ref}'
-            
+        return f'{self.payment_ref}'         
 
     def save(self, *args, **kwargs):
         if not self.id:
