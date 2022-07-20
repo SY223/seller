@@ -30,10 +30,10 @@ class Employee(models.Model):
     last_name = models.CharField(max_length=50)
     username = models.CharField(max_length=50)
     email = models.EmailField(unique=True)
-    phone_number = PhoneNumberField()
+    employee_nu = PhoneNumberField()
 
     def __str__(self):
-        return f'{self.last_name} {self.firsr_name} '
+        return f'{self.last_name} {self.first_name}'
 
 class Category(models.Model):
     category_name = models.CharField(max_length=50, unique=True)
@@ -48,8 +48,20 @@ class Category(models.Model):
     def __str__(self):
         return self.category_name
 
+
+
+class Customer(models.Model):
+    customer_name = models.CharField(max_length=50, blank=False)
+    customer_email = models.EmailField(unique=True)
+    customer_nu = PhoneNumberField()
+    store = models.ForeignKey(Location, on_delete=models.CASCADE, related_name='store_location')
+
+    def __str__(self):
+        return self.customer_name
+
+
 class Product(models.Model):
-    product_name = models.CharField(max_length=50, unique=True)
+    items = models.CharField(max_length=50, unique=True)
     slug = models.SlugField(max_length=50, unique=True)
     description = models.TextField()
     price = models.DecimalField(max_digits=15,decimal_places=2, default=Decimal('0.00'))
@@ -70,20 +82,10 @@ class Product(models.Model):
         return super(Product, self).save( *args, **kwargs)
 
 
-class Customer(models.Model):
-    customer_name = models.CharField(max_length=50, blank=False)
-    customer_email = models.EmailField(unique=True)
-    customer_phone_number = models.PhoneNumberField()
-    store = models.ForeignKey(Location, on_delete=models.CASCADE, related_name='store_location')
-
-    def __str__(self):
-        return self.customer_name
-
-
 class Order(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='customer')
     order_ref = models.CharField(max_length=10, unique=True)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product_name')
+    items = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='shop_orders')
     price = models.DecimalField(max_digits=15,decimal_places=2, default=Decimal('0.00'))
     quantity = models.IntegerField()
     total = models.DecimalField(max_digits=15,decimal_places=2, default=Decimal('0.00'))
