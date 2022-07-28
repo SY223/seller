@@ -78,28 +78,15 @@ class Category(models.Model):
         self.slug = slugify(self.category_name)
         super(Category, self).save()
 
-
-class Customer(models.Model):
-    customer_name = models.CharField(max_length=50, blank=False)
-    customer_email = models.EmailField(unique=True)
-    customer_nu = PhoneNumberField()
-    store = models.ManyToManyField(Location, related_name='store_location')
-    date_created = models.DateTimeField(auto_now_add=True)
-    modified_date = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return self.customer_name
-
-
 class Product(models.Model):
     item = models.CharField(max_length=50, unique=True)
     description = models.TextField()
     price = models.DecimalField(max_digits=15,decimal_places=2, default=Decimal('0.00'))
     image = models.ImageField(upload_to='photos/product', null=True, blank=True)
     stock = models.IntegerField()
-    is_available = models.BooleanField(default=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='product_category')
     slug = models.SlugField(blank=True, default='')
+    is_available = models.BooleanField(default=True)
     date_created = models.DateTimeField(auto_now_add=True)
     modified_date = models.DateTimeField(auto_now=True)
 
@@ -115,12 +102,25 @@ class Product(models.Model):
             self.date_created = datetime.datetime.now(tz=timezone.utc)
         self.modified_date = datetime.datetime.now(tz=timezone.utc)
         return super(Product, self).save(*args, **kwargs)
+        
+
+class Customer(models.Model):
+    customer_name = models.CharField(max_length=50, blank=False)
+    customer_email = models.EmailField(unique=True)
+    customer_nu = PhoneNumberField()
+    store = models.ManyToManyField(Location, related_name='store_location')
+    date_created = models.DateTimeField(auto_now_add=True)
+    modified_date = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.customer_name
+
 
 
 class Order(models.Model):
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='customer')
     order_ref = models.CharField(max_length=10, unique=True)
-    items = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='shop_orders')
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='customer')
+    items = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='cart_items')
     price = models.DecimalField(max_digits=15,decimal_places=2, default=Decimal('0.00'))
     quantity = models.IntegerField()
     total = models.DecimalField (max_digits=15,decimal_places=2, default=Decimal('0.00'))

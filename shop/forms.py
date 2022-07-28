@@ -27,6 +27,7 @@ class LocationForm(forms.ModelForm):
 
 class EmployeeForm(forms.ModelForm):
     store_location = forms.ModelChoiceField(queryset=Location.objects.all(),initial=0)
+
     first_name = forms.CharField(widget=forms.TextInput(attrs={
         'placeholder':'Enter firstname',
         'class': 'form-control',
@@ -54,30 +55,53 @@ class EmployeeForm(forms.ModelForm):
 
 
 class CategoryForm(forms.ModelForm):
+    category_name = forms.CharField(widget=forms.TextInput(attrs={
+        'placeholder':'Enter category name',
+        'class': 'form-control',
+    }))
+    description = forms.CharField(widget=forms.Textarea(attrs={
+        'placeholder':'Enter category description',
+        'class': 'form-control',
+    })) 
     class Meta:
         model = Category
-        fields = "__all__"
+        fields = ['category_name', 'description', 'cart_image',]
 
-class CustomerForm(forms.ModelForm):
-    class Meta:
-        model = Customer
-        fields = "__all__"
 
 class ProductForm(forms.ModelForm):
+    item = forms.CharField(widget=forms.TextInput(attrs={
+        'placeholder':'Enter product name',
+        'class': 'form-control',
+    }))
+    description = forms.CharField(widget=forms.Textarea(attrs={
+        'placeholder':'Enter product description',
+        'class': 'form-control',
+    })) 
+    stock = forms.CharField(widget=forms.NumberInput(attrs={
+        'placeholder':'Enter available stock',
+        'class': 'form-control',
+    }))
     class Meta:
         model = Product
-        fields = "__all__"
+        fields = ['item','description','price','image','stock']
 
 
-class OrderForm(forms.ModelForm):
+class CustomerForm(forms.ModelForm):
+    customer_name = forms.CharField(widget=forms.TextInput(attrs={
+        'placeholder':'Enter customer full name',
+        'class': 'form-control',
+    }))
+    customer_email = forms.CharField(widget=forms.EmailInput(attrs={
+        'placeholder':'Enter customer email address',
+        'class': 'form-control',
+    }))
+    customer_nu = forms.CharField(widget=forms.NumberInput(attrs={
+        'placeholder':'Enter customer telephone',
+        'class': 'form-control',
+    }))
     class Meta:
-        model = Order
-        fields = "__all__"
-        
+        model = Customer
+        fields = ['customer_name', 'customer_email', 'customer_nu',] 
 
 
-class PaymentForm(forms.ModelForm):
-    class Meta:
-        model = Payment
-        fields = "__all__"
        
