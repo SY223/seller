@@ -1,0 +1,18 @@
+{% extends 'base/base.html' %}
+{% block content %}
+
+<h2>OUR STAFFS</h2>
+<br>
+{% if employee_list %}
+<ul>
+  {% for staff in employee_list %}
+    <li>
+      <a href="{% url 'staff-detail' staff.id %}">{{ staff.last_name|upper }}</a> {{ staff.first_name|upper }}
+    </li>
+  {% endfor %}
+</ul>
+{% else %}
+  <p>There are no staffs recruited.</p>
+{% endif %}
+{% endblock %}
+

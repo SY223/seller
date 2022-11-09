@@ -6,6 +6,10 @@ from shop import views as shopapp_views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', shopapp_views.index, name='index'),
+    path('staff', shopapp_views.staff, name='staff'),
+    path('staff/<int:pk>/', shopapp_views.staff_detail, name='staff-detail'),
+    path('location/', shopapp_views.location, name='location'),
+    path('location/<int:pk>', shopapp_views.location_detail, name='location-detail'),
     path('add/store', shopapp_views.add_store, name='add-store'),
     path('add/employee', shopapp_views.add_employee, name='add-employee'),
     path('add/category', shopapp_views.add_category, name='add-category'),

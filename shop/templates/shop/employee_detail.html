@@ -1,0 +1,12 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+<h1>Name: {{ employee.first_name }} {{ employee.last_name }}</h1>
+<p><strong>Username:</strong> {{ employee.username }}</p>
+<p><strong>Store Location:</strong> <a href="{% url 'location-detail' employee.store_location.pk %}">{{ employee.store_location }}</a>
+<p><strong>Email:</strong> {{ employee.email }}</p>
+<p><strong>Phone Number:</strong> {{ employee.employee_phone }}</p>
+<p><strong>Joined:</strong> {{ employee.date_created }}</p>
+
+
+{% endblock %}
