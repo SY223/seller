@@ -3,11 +3,14 @@ from django.db import models
 from django.utils import timezone
 from decimal import *
 from phonenumber_field.modelfields import PhoneNumberField                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
-import random
+from django.urls import reverse
 from django.utils.text import slugify
+import random
+
+
 
 MAX_TRIES = 32
-REF_LENGTH = 150 
+REF_LENGTH = 10 
 CHARSET = '0123456789abcdefghjkmnpqrstvwxyz'
 UPCHARSET = '0123456789ABCDEFGHJKMNPQRSTVWXYZ'
 NUMDIGIT = '0123456789'
@@ -17,25 +20,42 @@ class Location(models.Model):
     street = models.CharField(max_length=50)
     city = models.CharField(max_length=50)
     zipcode = models.CharField(max_length=6)
-    date_created = models.DateTimeField(auto_now_add=True)
-    modified_date = models.DateTimeField(auto_now=True)
+    date_created = models.DateTimeField()
+    modified_date = models.DateTimeField()
+    
+    class Meta:
+        ordering = ['date_created']
 
     def __str__(self):
         return self.name
 
+
 class Employee(models.Model):
-    employee_ref = models.CharField(max_length=10, unique=True, null=True)
-    store_location = models.ForeignKey(Location, on_delete=models.SET_NULL, related_name='employee_store', null=True)
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
-    username = models.CharField(max_length=50)
-    email = models.EmailField(unique=True)
-    employee_nu = PhoneNumberField()
-    date_created = models.DateTimeField(auto_now_add=True)
-    modified_date = models.DateTimeField(auto_now=True)
+    employee_ref = models.CharField(max_length=10, unique=True)
+    store_location = models.ForeignKey(Location, on_delete=models.CASCADE,related_name='employee_store')
+    first_name = models.CharField(max_length=50, blank=False, null=False)
+    last_name = models.CharField(max_length=50, blank=False, null=False)
+    username = models.CharField(max_length=50, unique=True)
+    email = models.EmailField(unique=True, blank=False, null=False)
+    employee_phone = PhoneNumberField()
+    date_created = models.DateTimeField()
+    modified_date = models.DateTimeField()
+
+    class Meta:
+        ordering = ['date_created']
+
 
     def __str__(self):
         return f'{self.first_name} {self.last_name}'
+
+
+    # def usernameclean(self):
+    #     try:
+    #         self.username = self.email.split('@')[0]
+    #     except self.username.exists():
+    #         self.username += str(random.randrange(0,9,1))
+    #     return self.usernameclean
+
 
     def save(self, *args, **kwargs):
         if not self.id:
@@ -54,7 +74,9 @@ class Employee(models.Model):
                     raise ValueError("Staff with reference already exists")
             self.date_created = datetime.datetime.now(tz=timezone.utc)
         self.modified_date = datetime.datetime.now(tz=timezone.utc)
+        self.usernameclean()
         return super(Employee, self).save(*args, **kwargs)
+    
 
 
     
@@ -64,8 +86,8 @@ class Category(models.Model):
     slug = models.SlugField(blank=True, default='')
     description = models.TextField()
     cart_image = models.ImageField(upload_to='photos/categories', null=True, blank=True)
-    date_created = models.DateTimeField(auto_now_add=True)
-    modified_date = models.DateTimeField(auto_now=True)
+    date_created = models.DateTimeField()
+    modified_date = models.DateTimeField()
 
     class Meta:
         verbose_name = 'category'
@@ -87,8 +109,8 @@ class Product(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='product_category')
     slug = models.SlugField(blank=True, default='')
     is_available = models.BooleanField(default=True)
-    date_created = models.DateTimeField(auto_now_add=True)
-    modified_date = models.DateTimeField(auto_now=True)
+    date_created = models.DateTimeField()
+    modified_date = models.DateTimeField()
 
     def __str__(self):
         return self.item
@@ -102,15 +124,15 @@ class Product(models.Model):
             self.date_created = datetime.datetime.now(tz=timezone.utc)
         self.modified_date = datetime.datetime.now(tz=timezone.utc)
         return super(Product, self).save(*args, **kwargs)
-        
+
 
 class Customer(models.Model):
     customer_name = models.CharField(max_length=50, blank=False)
     customer_email = models.EmailField(unique=True)
-    customer_nu = PhoneNumberField()
+    customer_phone = PhoneNumberField()
     store = models.ManyToManyField(Location, related_name='store_location')
-    date_created = models.DateTimeField(auto_now_add=True)
-    modified_date = models.DateTimeField(auto_now=True)
+    date_created = models.DateTimeField()
+    modified_date = models.DateTimeField()
 
     def __str__(self):
         return self.customer_name
@@ -127,7 +149,7 @@ class Order(models.Model):
     total_paid = models.DecimalField(max_digits=15,decimal_places=2, default=Decimal('0.00'))
     balance = models.DecimalField(max_digits=15,decimal_places=2, default=Decimal('0.00')) #Amount to pay as change to customer
     accrual = models.DecimalField(max_digits=15,decimal_places=2, default=Decimal('0.00')) #Amount customer owe us
-    date_created = models.DateTimeField(auto_now_add=True)
+    date_created = models.DateTimeField()
 
     def __str__(self):
         return self.order_ref
@@ -159,12 +181,12 @@ class Payment(models.Model):
         ('Declined','Declined'),
     )
     order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True, blank=True, related_name='order')
-    payment_ref = models.CharField(max_length=150, unique=True)
+    payment_ref = models.CharField(max_length=10, unique=True)
     payment_method = models.CharField(max_length=150)
     amount_paid = models.DecimalField(max_digits=15,decimal_places=2, default=Decimal('0.00'))
     status = models.CharField(max_length=150, choices=Status)
-    date_created = models.DateTimeField(default=timezone.now)
-    modified_date = models.DateTimeField(auto_now=True)
+    date_created = models.DateTimeField()
+    modified_date = models.DateTimeField()
 
     def __str__(self):
         return f'{self.payment_ref}'         

@@ -7,36 +7,49 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">                                                                                                                                                                                                                                                                                                                         
     <link href="{% static 'base/css/site.css' %}" rel="stylesheet">
 </head>
+
+    <!-- <form action="/" method="get" class="form-inline mt-2 mt-md-0">
+        <input id="q" name="q" value="{{ request.GET.q }}" class="form-control mr-sm-2" \
+        type="text" placeholder="Search.." aria-label="Search">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </form> -->
+
 <body class="container">
-    <div id="content">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <a class="nav-link" href="/">Home</a>
-                <li class="nav-item"> <!-- here -->
-                    <a class="nav-link" href="{% url 'add-store' %}">Add Store Front</a>
-                </li>
-                <li class="nav-item"> <!-- here -->
-                    <a class="nav-link" href="{% url 'add-employee' %}">Add Staff</a>
-                </li>
-                <li class="nav-item"> <!-- here -->
-                    <a class="nav-link" href="{% url 'add-category' %}">Add Category</a>
-                </li>
-                <li class="nav-item"> <!-- here -->
-                    <a class="nav-link" href="{% url 'add-product' %}">Add Category</a>
-                </li>
-                <li class="nav-item"> <!-- here -->
-                    <a class="nav-link" href="{% url 'add-customer' %}">Add Category</a>
-                </li>
-            </li>
-            <!-- <form action="/" method="get" class="form-inline mt-2 mt-md-0">
-                <input id="q" name="q" value="{{ request.GET.q }}" class="form-control mr-sm-2" \
-                type="text" placeholder="Search.." aria-label="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-            </form> -->
-        </ul>
+    <header>
+        <nav aria-label="Main navigation">
+            <div class="offcanvas-body p-4 pt-0 p-lg-0">
+                <hr class="d-lg">
+                <ul class="navbar-nav flex-row flex-wrap bd-navbar-nav">
+                    <li class="nav-item col-6 col-lg-auto">
+                        <a class="nav-link py-2 px-0 px-lg-2" href="/">Home</a>
+                    </li>
+                    <li class="nav-item col-6 col-lg-auto">
+                        <a class="nav-link py-2 px-0 px-lg-2" href="{% url 'location' %}">Our Stores</a>
+                    </li>
+                    <li class="nav-item col-6 col-lg-auto">
+                        <a class="nav-link py-2 px-0 px-lg-2" href="{% url 'staff' %}">Employees</a>
+                    </li>
+                    <li class="nav-item col-6 col-lg-auto">
+                        <a class="nav-link py-2 px-0 px-lg-2" href="{% url 'add-store' %}">New Store Front</a>
+                    </li>
+                    <li class="nav-item col-6 col-lg-auto">
+                        <a class="nav-link py-2 px-0 px-lg-2" href="{% url 'add-employee' %}">New Employee</a>
+                    </li>
+                    <li class="nav-item col-6 col-lg-auto">
+                        <a class="nav-link py-2 px-0 px-lg-2" href="{% url 'add-category' %}">New Category</a>
+                    </li>
+                    <li class="nav-item col-6 col-lg-auto">
+                        <a class="nav-link py-2 px-0 px-lg-2" href="{% url 'add-product' %}">New Product</a>
+                    </li>
+                </ul>
+                <hr class="d-lg">
+            </div>
+        </nav>
+    </header>
+
+
         
-        {% block content %}{% endblock %}
-    </div>
+    {% block content %}{% endblock %}
 
 
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
