@@ -2,6 +2,7 @@ from django.contrib import admin
 from shop.models import *
 
 admin.site.register(Location)
+admin.site.register(Role)
 admin.site.register(Employee)
 admin.site.register(Category)
 admin.site.register(Customer)

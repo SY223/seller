@@ -19,7 +19,7 @@ def add_store(request):
             zipcode = request.POST.get('zipcode')
             new_loc = Location(name=name, street=street,city=city,zipcode=zipcode)
             new_loc.save()
-            return redirect('our_stores')
+            return redirect('location')
     else:
         form = LocationForm()
     context = {'form':form}
@@ -32,12 +32,13 @@ def add_employee(request):
         if form.is_valid():
             first_name = form.cleaned_data.get('first_name')
             last_name = form.cleaned_data.get('last_name')
-            email = form.cleaned_data.get('email')  
+            email = form.cleaned_data.get('email')
+            username = form.cleaned_data.get('username')
             employee_phone = form.cleaned_data.get('employee_phone')
             store_location = form.cleaned_data.get('store_location')
-            new_staff = Employee.objects.create(first_name=first_name, last_name=last_name, email=email,employee_phone=employee_phone,store_location=store_location)
+            new_staff = Employee.objects.create(first_name=first_name, last_name=last_name, email=email,username=username,employee_phone=employee_phone,store_location=store_location)
             new_staff.save()
-            return redirect('our-staffs')
+            return redirect('staff')
         else:
             return render(request, 'shop/employee.html', {'form':form})   
     else:
