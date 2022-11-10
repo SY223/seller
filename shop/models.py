@@ -15,6 +15,7 @@ CHARSET = '0123456789abcdefghjkmnpqrstvwxyz'
 UPCHARSET = '0123456789ABCDEFGHJKMNPQRSTVWXYZ'
 NUMDIGIT = '0123456789'
 
+
 class Location(models.Model):
     name = models.CharField(max_length=50)
     street = models.CharField(max_length=50)
@@ -29,10 +30,17 @@ class Location(models.Model):
     def __str__(self):
         return self.name
 
+class Role(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+
 
 class Employee(models.Model):
     employee_ref = models.CharField(max_length=10, unique=True)
     store_location = models.ForeignKey(Location, on_delete=models.CASCADE,related_name='employee_store')
+    #position = models.ForeignKey(Role, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=50, blank=False, null=False)
     last_name = models.CharField(max_length=50, blank=False, null=False)
     username = models.CharField(max_length=50, unique=True)
@@ -49,12 +57,7 @@ class Employee(models.Model):
         return f'{self.first_name} {self.last_name}'
 
 
-    # def usernameclean(self):
-    #     try:
-    #         self.username = self.email.split('@')[0]
-    #     except self.username.exists():
-    #         self.username += str(random.randrange(0,9,1))
-    #     return self.usernameclean
+
 
 
     def save(self, *args, **kwargs):

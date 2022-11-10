@@ -33,7 +33,7 @@ class EmployeeForm(forms.ModelForm):
     store_location = forms.ModelChoiceField(widget=forms.Select,queryset=Location.objects.all())
     class Meta:
         model = Employee
-        fields = ['first_name','last_name', 'email','employee_phone','store_location']
+        fields = ['first_name','last_name', 'email','username','employee_phone','store_location']
     
 
     def clean_email(self):
