@@ -21,8 +21,8 @@ class Location(models.Model):
     street = models.CharField(max_length=50)
     city = models.CharField(max_length=50)
     zipcode = models.CharField(max_length=6)
-    date_created = models.DateTimeField()
-    modified_date = models.DateTimeField()
+    date_created = models.DateTimeField(auto_now=True)
+    modified_date = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.name
