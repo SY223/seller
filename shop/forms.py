@@ -1,5 +1,5 @@
 from django import forms
-from shop.models import Employee, Location, Category, Customer, Product, Order, Payment
+from shop.models import *
 import random
 
 
@@ -51,6 +51,7 @@ class EmployeeForm(forms.Form):
     email = forms.EmailField(required=True,help_text='Enter email')
     username = forms.CharField(required=True,help_text='Enter your username')
     employee_phone = forms.CharField(required=True, widget=forms.NumberInput)
+    position = forms.ModelChoiceField(required=True,widget=forms.Select,queryset=Role.objects.all())
     store_location = forms.ModelChoiceField(required=True,widget=forms.Select,queryset=Location.objects.all())
     
     def clean_email(self):

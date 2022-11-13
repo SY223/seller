@@ -35,13 +35,13 @@ class Role(models.Model):
 
 
 class Employee(models.Model):
-    employee_ref = models.CharField(max_length=10, unique=True)   
-    #position = models.ForeignKey(Role, on_delete=models.CASCADE)
+    employee_ref = models.CharField(max_length=10, unique=True)
     first_name = models.CharField(max_length=50, blank=False, null=False)
     last_name = models.CharField(max_length=50, blank=False, null=False)
     email = models.EmailField(unique=True, blank=False, null=False)
     username = models.CharField(max_length=50, unique=True)
     employee_phone = PhoneNumberField()
+    position = models.ForeignKey(Role, on_delete=models.CASCADE, related_name='position', null=True)
     store_location = models.ForeignKey(Location, on_delete=models.CASCADE,related_name='location')
     date_created = models.DateTimeField()
     modified_date = models.DateTimeField()
