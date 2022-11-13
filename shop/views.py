@@ -35,8 +35,10 @@ def new_employee(request):
             email = form.cleaned_data['email']
             username = form.cleaned_data['username']
             employee_phone = form.cleaned_data['employee_phone']
+            position = form.cleaned_data['position']
             store_location = form.cleaned_data['store_location']
-            new_staff = Employee.objects.create(first_name=first_name, last_name=last_name, email=email, username=username, employee_phone=employee_phone,store_location=store_location)
+            new_staff = Employee.objects.create(first_name=first_name, last_name=last_name, email=email, username=username, employee_phone=employee_phone,\
+                position=position, store_location=store_location)
             new_staff.save()
             return redirect('staff')  
     else:
