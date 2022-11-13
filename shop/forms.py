@@ -3,11 +3,45 @@ from shop.models import Employee, Location, Category, Customer, Product, Order, 
 import random
 
 
+CHARSET = 'abcdefghjkmnpqrstvwxyzABCDEFGHJKMNPQRSTVWXYZ'
+
+
+
 class LocationForm(forms.Form):
     name = forms.CharField()
     street = forms.CharField()
     city = forms.CharField()
     zipcode = forms.CharField()
+
+    def clean_name(self):
+        name = self.cleaned_data['name']
+        special_characters = '$@#&'
+        for char in special_characters:
+            if char in name:
+                raise forms.ValidationError("Name cannot contain special characters.")
+        return name
+    def clean_street(self):
+        street = self.cleaned_data['street']
+        special_characters = '$@#&'
+        for char in special_characters:
+            if char in street:
+                raise forms.ValidationError("Street cannot contain special characters.")
+        return street
+    def clean_city(self):
+        city = self.cleaned_data['city']
+        special_characters = '$@#&'
+        for char in special_characters:
+            if char in city:
+                raise forms.ValidationError("City cannot contain special characters.")
+        return city
+    def clean_zipcode(self):
+        zipcode = self.cleaned_data['zipcode']
+        for letas in CHARSET:
+            if letas in zipcode:
+                raise forms.ValidationError("Zip must not contain alphabets.")
+        return zipcode
+
+        
 
 
 
