@@ -23,9 +23,6 @@ class Location(models.Model):
     zipcode = models.CharField(max_length=6)
     date_created = models.DateTimeField()
     modified_date = models.DateTimeField()
-    
-    class Meta:
-        ordering = ['date_created']
 
     def __str__(self):
         return self.name
@@ -38,14 +35,14 @@ class Role(models.Model):
 
 
 class Employee(models.Model):
-    employee_ref = models.CharField(max_length=10, unique=True)
-    store_location = models.ForeignKey(Location, on_delete=models.CASCADE,related_name='employee_store')
+    employee_ref = models.CharField(max_length=10, unique=True)   
     #position = models.ForeignKey(Role, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=50, blank=False, null=False)
     last_name = models.CharField(max_length=50, blank=False, null=False)
-    username = models.CharField(max_length=50, unique=True)
     email = models.EmailField(unique=True, blank=False, null=False)
+    username = models.CharField(max_length=50, unique=True)
     employee_phone = PhoneNumberField()
+    store_location = models.ForeignKey(Location, on_delete=models.CASCADE,related_name='location')
     date_created = models.DateTimeField()
     modified_date = models.DateTimeField()
 
@@ -55,9 +52,6 @@ class Employee(models.Model):
 
     def __str__(self):
         return f'{self.first_name} {self.last_name}'
-
-
-
 
 
     def save(self, *args, **kwargs):
@@ -77,7 +71,6 @@ class Employee(models.Model):
                     raise ValueError("Staff with reference already exists")
             self.date_created = datetime.datetime.now(tz=timezone.utc)
         self.modified_date = datetime.datetime.now(tz=timezone.utc)
-        self.usernameclean()
         return super(Employee, self).save(*args, **kwargs)
     
 

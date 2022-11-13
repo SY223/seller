@@ -7,7 +7,7 @@
 <ul>
   {% for store in store_list %}
     <li>
-      <a href="{% url 'location-detail' store.id %}">{{ store.name }}</a> {{ store.city }}
+      <a href="{% url 'location-detail' store.id %}">{{ store.name|upper }}</a> {{ store.city|title }}
     </li>
   {% endfor %}
 </ul>
